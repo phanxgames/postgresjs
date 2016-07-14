@@ -12,9 +12,8 @@
  * <h4>Installation:</h4>
  * <pre>
  *      npm install postgresjs
- *      npm install suspend
  * </pre>
- * <p>Note: the suspend module should be installed as a dependency.</p>
+ * <p>Note: the dictionaryjs, pg and suspend modules should be automatically installed as dependencies, but you may need to install these as well.</p>
  *
  * Copy the dbConfig.ex.json file into your project source folder, rename to dbConfig.json,
  * and update with your database connection information.

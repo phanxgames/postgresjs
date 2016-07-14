@@ -219,5 +219,6 @@ be converted to a parameter internally.
 
 - [node-postgres](https://github.com/brianc/node-postgres)
 - [suspend](https://github.com/jmar777/suspend)
+- [dictionaryjs](https://github.com/phanxgames/dictionaryjs)
 
 
