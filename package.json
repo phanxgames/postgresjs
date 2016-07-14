@@ -1,0 +1,17 @@
+{
+  "name": "postgresjs",
+  "version": "0.0.1",
+  "description": "A simple wrapper for PostgreSQL database functionality.",
+  "main": "postgresjs",
+  "dependencies": {
+    "pg":"brianc/node-postgres",
+    "dictionaryjs":"phanxgames/dictionaryjs",
+    "suspend":"jmar777/suspend"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phanxgames/postgresjs.git"
+  },
+  "keywords": ["postgre","postgres","postgresql"]
+}
