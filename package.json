@@ -1,17 +1,23 @@
 {
   "name": "postgresjs",
-  "version": "0.0.1",
-  "description": "A simple wrapper for PostgreSQL database functionality.",
+  "version": "1.0.0",
+  "description": "ES6 wrapper for PostgreSQL database connections using generator async flow controls.",
   "main": "postgresjs",
+  "author": "Henry Price <phanxgames@gmail.com>",
   "dependencies": {
     "pg":"brianc/node-postgres",
     "dictionaryjs":"phanxgames/dictionaryjs",
     "suspend":"jmar777/suspend"
   },
+  "engines": {
+	"node":">= 6.2.2"
+  },
+  "license": "MIT",
+  
   "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/phanxgames/postgresjs.git"
   },
-  "keywords": ["postgre","postgres","postgresql"]
+  "keywords": ["postgre","postgres","postgresql","generators","es6","yield","async"]
 }
