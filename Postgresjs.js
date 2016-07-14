@@ -848,7 +848,8 @@ class Postgresjs {
      * @param {Array} [options.whereParas=null] - Array of values to replace parameters in where SQL
      *                      <br>Not needed if you use whereHelper.
      * @param {int} [options.limit=null] - Number of records to delete, or null for infinite.
-     * @param cb - (optional) callback, cb(err)
+     * @param {Postgresjs~cbOnError} [cb=null] - Use callback or leave null to use suspend.resume.
+     *                  <br>Returns cb(err)
      */
     deleteHelper(options,cb) {
         var self = this;
