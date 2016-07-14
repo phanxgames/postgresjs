@@ -1,20 +1,22 @@
 postgresjs
 =================
-Postgresql database wrapper that provides helpers to query the database.
+PostgreSQL database wrapper that provides helpers to query the database.
 
 * Select, Insert, Update and Delete Query Builders
 * Merge Command allowing insert or update
-* Suspend integration for yield based async programming
+* Suspend integration for generator-based async control-flow
 * Idle Connection Auto Closer 
+* No transpiling required
+
+### requirements
+
+* ECMAScript 2015 (ES6)
+* Node.JS 6.2.2 or later (tested on 6.2.2)
 
 ### jsdoc documentation
 
 [https://cdn.rawgit.com/phanxgames/postgresjs/master/jsdoc/](https://cdn.rawgit.com/phanxgames/postgresjs/master/jsdoc/Postgresjs.html)
  
-### requirements
-
-* 2015 (ES6)
-* Node.JS 6.2.2 or later (tested on 6.2.2)
 
 ### install
 
@@ -66,7 +68,7 @@ If you do provide a callback, the 3rd parameter, "next" (ex: cb(err,result, next
 
 There are 3 ways to loop over the resulting rows of a query.
 
-1. Standard callback.
+1) Standard callback.
 
 ```
 	yield db.query("select email from users where id=? ;",[userid],
@@ -77,7 +79,7 @@ There are 3 ways to loop over the resulting rows of a query.
 	});
 ```
 
-2. Rows Getter.
+2) Rows Getter.
 
 ```
 	yield db.query("select email from users where id=? ;",[userid]);	
@@ -87,7 +89,7 @@ There are 3 ways to loop over the resulting rows of a query.
 	}
 ```
 
-3. Async Looping (non-blocking)
+3) Async Looping (non-blocking)
 
 ```
 	yield db.query("select email from users where id=? ;",[userid]);
@@ -212,5 +214,10 @@ be converted to a parameter internally.
 	//..
 ```
 
+
+### Module Dependencies
+
+- [node-postgres](https://github.com/brianc/node-postgres)
+- [suspend](https://github.com/jmar777/suspend)
 
 
