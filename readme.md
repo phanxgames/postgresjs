@@ -9,7 +9,7 @@ Postgresql database wrapper that provides helpers to query the database.
 
 ### jsdoc documentation
 
-[https://htmlpreview.github.io/?https://github.com/phanxgames/postgresjs/master/jsdoc/](https://htmlpreview.github.io/?https://raw.githubusercontent.com/phanxgames/postgresjs/master/jsdoc/Postgresjs.html)
+[https://cdn.rawgit.com/phanxgames/postgresjs/master/jsdoc/](https://cdn.rawgit.com/phanxgames/postgresjs/master/jsdoc/Postgresjs.html)
  
 ### requirements
 
