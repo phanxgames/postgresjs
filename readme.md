@@ -68,7 +68,7 @@ If you do provide a callback, the 3rd parameter, "next" (ex: cb(err,result, next
 
 There are 3 ways to loop over the resulting rows of a query.
 
-1) Standard callback.
+1: Standard callback.
 
 ```
 	yield db.query("select email from friends where user_id=? ;",[userid],
@@ -82,7 +82,7 @@ There are 3 ways to loop over the resulting rows of a query.
 	});
 ```
 
-2) Rows Getter.
+2: Rows Getter.
 
 ```
 	yield db.query("select email from friends where user_id=? ;",[userid]);	
@@ -92,7 +92,7 @@ There are 3 ways to loop over the resulting rows of a query.
 	}
 ```
 
-3) Async Looping (non-blocking)
+3: Async Looping (non-blocking)
 
 ```
 	yield db.query("select email from friends where user_id=? ;",[userid]);
