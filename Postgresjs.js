@@ -71,7 +71,7 @@
  *
  *      yield db.end();
  *
- *   });
+ *   })();
  * </pre>
  */
 class Postgresjs {

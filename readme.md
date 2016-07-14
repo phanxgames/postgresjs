@@ -60,7 +60,7 @@ If you do provide a callback, the 3rd parameter, "next" (ex: cb(err,result, next
 	   //... place query methods here ...
 	   
 	   yield db.end();
-	});
+	})();
 ```
 
  
