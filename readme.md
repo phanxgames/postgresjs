@@ -87,7 +87,7 @@ There are 3 ways to loop over the resulting rows of a query.
 ```
 	yield db.query("select email from friends where user_id=? ;",[userid]);	
 	
-	for (let row of rows) {
+	for (let row of db.rows) {
 		console.log(row.email);
 	}
 ```
