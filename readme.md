@@ -3,7 +3,7 @@ postgresjs
 PostgreSQL database wrapper that provides helpers to query the database.
 
 * Select, Insert, Update and Delete Query Builders
-* Merge Command allowing insert or update
+* Merge Command allowing insert or update in one command
 * Suspend integration for generator-based async control-flow
 * Idle Connection Auto Closer 
 * No transpiling required
@@ -64,38 +64,41 @@ If you do provide a callback, the 3rd parameter, "next" (ex: cb(err,result, next
 ```
 
  
-### reading rows
+### accessing rows
 
 There are 3 ways to loop over the resulting rows of a query.
 
 1) Standard callback.
 
 ```
-	yield db.query("select email from users where id=? ;",[userid],
-		function(err,rows) {
+	yield db.query("select email from friends where user_id=? ;",[userid],
+		function(err,rows,cbResume) {
 			for (let row of rows) {
-				//..
+				console.log(row.email);
 			}
+			
+			//move past the yield
+			cbResume();
 	});
 ```
 
 2) Rows Getter.
 
 ```
-	yield db.query("select email from users where id=? ;",[userid]);	
+	yield db.query("select email from friends where user_id=? ;",[userid]);	
 	
 	for (let row of rows) {
-		//..
+		console.log(row.email);
 	}
 ```
 
 3) Async Looping (non-blocking)
 
 ```
-	yield db.query("select email from users where id=? ;",[userid]);
+	yield db.query("select email from friends where user_id=? ;",[userid]);
 	
 	yield db.asyncForEach(function(index,row,cbNext) {
-		//..
+		console.log(row.email);
 	});
 
 ```
@@ -130,7 +133,15 @@ By default this is not enabled, however you may want to keep this enabled and wa
 console to see if the auto closer picks up on any open connections so you can address
 it and proprely close it when you are done.
 
- 
+
+### merge utility
+
+Conditionally insert or update a row.
+If the row exists, update the columns; otherwise, insert as a new row.
+
+See Merge Helper below.
+
+
 ### query helpers examples
 
 The Helpers will help you build SQL statements and provide parameterized values which
@@ -138,13 +149,14 @@ safeguard your queries from SQL injections. Any property that is labled as "valu
 be converted to a parameter internally.
 
 ##### Select Helper
+
 ```
 	//..
 	yield db.selectHelper({
 		 table:"users",
 		 columns:["username","email"],
 		 where: db.whereHelper({
-			 "username -like":"h%"
+			 "username -like":"t%"
 		 }),
 		 orderBy: db.orderByHelper({
 			 "email":"ASC"
