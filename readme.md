@@ -99,6 +99,7 @@ There are 3 ways to loop over the resulting rows of a query.
 	
 	yield db.asyncForEach(function(index,row,cbNext) {
 		console.log(row.email);
+		cbNext();
 	});
 
 ```
