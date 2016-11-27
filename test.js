@@ -14,7 +14,7 @@ suspend(function*() {
 
     yield db.start();
 
-    let result = yield db.selectRow("select id,named from characters where id=? ;",[2]);
+    let result = yield db.selectRow("select id,name from characters where id=? ;",[2]);
 
     if (result!=null) {
 
@@ -23,7 +23,20 @@ suspend(function*() {
         console.log(result.name);
     }
 
-    return;
+    yield db.close();
+
+    console.log("closed");
+
+    yield db.start();
+
+    console.log("reopened");
+
+    //let arr = yield db.selectArray("select id,name from characters ;");
+
+   // console.log(arr);
+
+
+    console.log("------------------------");
 
     yield db.query("select name from characters limit 20 ;");
 

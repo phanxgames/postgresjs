@@ -270,7 +270,6 @@ class Postgresjs {
 
         self.handleCallback(cb, null);
 
-        self.resume = null;
         self.resume_next = null;
     }
 
