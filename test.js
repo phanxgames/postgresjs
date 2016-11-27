@@ -3,14 +3,27 @@ var suspend = require("suspend"),
 
 
 var Postgresjs = require("./Postgresjs");
-Postgresjs.config = require('./dbConfig.json');
+Postgresjs.config = require('./tests/dbConfig.json');
 
 
 var db = new Postgresjs(resume);
 
 suspend(function*() {
 
+    db.throwErrors = false;
+
     yield db.start();
+
+    let result = yield db.selectRow("select id,named from characters where id=? ;",[2]);
+
+    if (result!=null) {
+
+        console.log(result);
+
+        console.log(result.name);
+    }
+
+    return;
 
     yield db.query("select name from characters limit 20 ;");
 

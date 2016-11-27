@@ -110,6 +110,8 @@ class Postgresjs {
         this.resultCount = 0;
         this.last_error = null;
 
+        this.throwErrors = true;
+
         this.setLocalConfig(config);
 
     }
@@ -471,6 +473,25 @@ class Postgresjs {
         doLoop();
     }
 
+    //##########################################################################
+    //  Select Methods
+    //##########################################################################
+
+    selectRow(sql, paras, cb) {
+        this.initHandleCallback();
+
+        this.query(sql, paras, (err,result) => {
+            if (err || result==null || result.length==0) {
+                this.handleCallback(cb,err,result);
+                return;
+            }
+            this.handleCallback(cb,null,result[0]);
+        });
+    }
+
+    selectArray(sql, paras, cb) {
+        this.query(sql, paras, cb);
+    }
 
 
 
@@ -1326,8 +1347,13 @@ class Postgresjs {
         }
         if (cb)
             cb(err, result, this.resume_next);
-        else if (this.resume_next)
-            this.resume_next(err, result);
+        else if (this.resume_next) {
+
+            if (this.throwErrors)
+                this.resume_next(err, result);
+            else
+                this.resume_next(null, result);
+        }
     }
 };
 module.exports = Postgresjs;
