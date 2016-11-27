@@ -195,6 +195,7 @@ class Postgresjs {
 
         if (self.opened!=null) {
             var err = new Error("Database connection already open.");
+            console.error(err);
             self.handleCallback(cb, err);
             return;
         }
@@ -310,6 +311,7 @@ class Postgresjs {
         //Check if database connection is open.
         if (self.client==null) {
             var err = new Error("Database Connection is not open.");
+            console.error(err);
             self.handleCallback(cb,err);
             return;
         }
@@ -380,6 +382,7 @@ class Postgresjs {
 
         if (self.client==null) {
             var err = new Error("Database connect is not open.");
+            console.error(err);
             self.handleCallback(cb,err);
             return;
         }
@@ -609,7 +612,16 @@ class Postgresjs {
      */
     selectHelper(options,cb) {
 
-        if (options==null) throw Error("SelectHelper: Options parameter is required.");
+        if (options==null) {
+            let err = new Error("SelectHelper: Options parameter is required.");
+
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var table = options.table || null;
         var columns = options.columns || null;
@@ -619,7 +631,16 @@ class Postgresjs {
         var limit = options.limit || null;
         var start = options.start || 0;
 
-        if (table == null) throw Error("SelectHelper: Table option is required.");
+        if (table == null) {
+            let err = new Error("SelectHelper: Table option is required.");
+
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         //table,columns,where,whereParas,orderBy
 
@@ -703,13 +724,31 @@ class Postgresjs {
      */
     insertHelper(options,cb) {
 
-        if (options==null) throw Error("InsertHelper: Options parameter required.");
+        if (options==null) {
+
+            let err = new Error("InsertHelper: Options parameter required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var table = options.table || null;
         var columns = options.columns || null;
         var values = options.values || null;
 
-        if (table == null) throw Error("InsertHelper: Table option is required.");
+        if (table == null) {
+
+            let err = new Error("InsertHelper: Table option is required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var sql = "INSERT INTO " + table;
 
@@ -747,7 +786,13 @@ class Postgresjs {
 
             if (tempValues==null || tempColumns==null ||
                 tempColumns.length != tempValues.length) {
-                    throw new Error("InsertHelper: Number of Columns and Values do not match.");
+
+                    let err = new Error("InsertHelper: Number of Columns and Values do not match.");
+                    if (this._throwErrors)
+                        throw err;
+                    else
+                        console.error(err);
+
                     return;
             }
             sql += "(" + tempColumns.join(",") + ") VALUES ";
@@ -801,7 +846,15 @@ class Postgresjs {
     updateHelper(options,cb) {
         var self = this;
 
-        if (options==null) throw Error("UpdateHelper: Options parameter required.");
+        if (options==null) {
+            let err = new Error("UpdateHelper: Options parameter required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
 
         var table = options.table;
@@ -810,7 +863,15 @@ class Postgresjs {
         var where = options.where;
         var whereParas = options.whereParas;
 
-        if (table == null) throw Error("UpdateHelper: Table option is required.");
+        if (table == null) {
+            let err = new Error("UpdateHelper: Table option is required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
 
         var sql = "UPDATE " + table + " SET ";
@@ -844,7 +905,12 @@ class Postgresjs {
 
         if (tempValues==null || tempColumns==null ||
             tempColumns.length != tempValues.length) {
-            throw new Error("UpdateHelper: Number of Columns and Values do not match.");
+            let err = new Error("UpdateHelper: Number of Columns and Values do not match.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
             return;
         }
 
@@ -914,14 +980,31 @@ class Postgresjs {
     deleteHelper(options,cb) {
         var self = this;
 
-        if (options==null) throw Error("DeleteHelper: Options parameter required.");
+        if (options==null) {
+
+            let err = new Error("DeleteHelper: Options parameter required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var table = options.table;
         var where = options.where;
         var whereParas = options.whereParas;
         var limit = options.limit;
 
-        if (table == null) throw Error("DeleteHelper: Table option is required.");
+        if (table == null) {
+            let err = new Error("DeleteHelper: Table option is required.");
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var sql = "DELETE FROM " + table + " ";
         var finalParas = null;
@@ -994,7 +1077,16 @@ class Postgresjs {
     mergeHelper(options,cb) {
         var self = this;
 
-        if (options==null) throw Error("MergeHelper: Options parameter required.");
+        if (options==null) {
+            let err = new Error("MergeHelper: Options parameter required.");
+
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
         var table = options.table;
         var columns = options.columns;
@@ -1002,7 +1094,16 @@ class Postgresjs {
         var where = options.where;
         var whereParas = options.whereParas;
 
-        if (table == null) throw Error("MergeHelper: Table option is required.");
+        if (table == null) {
+            let err = new Error("MergeHelper: Table option is required.");
+
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
+            return;
+        }
 
 
         var sqlInsert = "insert into " + table + " (";
@@ -1039,7 +1140,13 @@ class Postgresjs {
 
         if (tempValues==null || tempColumns==null ||
             tempColumns.length != tempValues.length) {
-            throw new Error("MergeHelper: Number of Columns and Values do not match.");
+            let err= new Error("MergeHelper: Number of Columns and Values do not match.");
+
+            if (this._throwErrors)
+                throw err;
+            else
+                console.error(err);
+
             return;
         }
 
