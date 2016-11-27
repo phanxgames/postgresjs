@@ -110,7 +110,7 @@ class Postgresjs {
         this.resultCount = 0;
         this.last_error = null;
 
-        this.throwErrors = true;
+        this._throwErrors = true;
 
         this.setLocalConfig(config);
 
@@ -119,6 +119,16 @@ class Postgresjs {
     //##########################################################################
     //  Config Methods
     //##########################################################################
+
+    /**
+     * Disabling throwErrors will stop suspend from throwing errors on callbacks.
+     * This is enabled by default.
+     * @param {Boolean} value
+     */
+    set throwErrors(value) {
+        this._throwErrors = value;
+    }
+
 
     /**
      * @description Required to set this before you first initalize this class.<br>
@@ -477,6 +487,20 @@ class Postgresjs {
     //  Select Methods
     //##########################################################################
 
+    /**
+     * Executes SQL statement on database and returns the first row.
+     * <p>Use question-marks (ie: ?) as unnamed parameters within the SQL statement.</p>
+     * <h4>Example:</h4>
+     * <pre>
+     *     //..
+     *     let row = yield db.selectRow("select username from users where email=?;",["test@test.com"]);
+     *     //..
+     * </pre>
+     * @param {string} sql - sql statement to execute
+     * @param {Array} [paras=null] - array of parameters, replacing "?" in SQL
+     * @param {Postgresjs~cbOnQuery} [cb=null] - Use callback or leave null to use suspend.resume.
+     *              <br>Returns cb(err,results) where result is an array of rows.
+     */
     selectRow(sql, paras, cb) {
         this.initHandleCallback();
 
@@ -489,6 +513,21 @@ class Postgresjs {
         });
     }
 
+
+    /**
+     * Executes SQL statement on database and returns the array of rows.
+     * <p>Use question-marks (ie: ?) as unnamed parameters within the SQL statement.</p>
+     * <h4>Example:</h4>
+     * <pre>
+     *     //..
+     *     let arr = yield db.selectArray("select username from users where email=?;",["test@test.com"]);
+     *     //..
+     * </pre>
+     * @param {string} sql - sql statement to execute
+     * @param {Array} [paras=null] - array of parameters, replacing "?" in SQL
+     * @param {Postgresjs~cbOnQuery} [cb=null] - Use callback or leave null to use suspend.resume.
+     *              <br>Returns cb(err,results) where result is an array of rows.
+     */
     selectArray(sql, paras, cb) {
         this.query(sql, paras, cb);
     }
@@ -1349,7 +1388,7 @@ class Postgresjs {
             cb(err, result, this.resume_next);
         else if (this.resume_next) {
 
-            if (this.throwErrors)
+            if (this._throwErrors)
                 this.resume_next(err, result);
             else
                 this.resume_next(null, result);

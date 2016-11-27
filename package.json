@@ -1,6 +1,6 @@
 {
   "name": "postgresjs",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "ES6 wrapper for PostgreSQL database connections using generator async flow controls.",
   "main": "postgresjs",
   "author": "Henry Price <phanxgames@gmail.com>",

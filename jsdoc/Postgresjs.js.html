@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Postgresjs.html">Postgresjs</a><ul class='methods'><li data-type='method'><a href="Postgresjs.html#asyncForEach">asyncForEach</a></li><li data-type='method'><a href="Postgresjs.html#begin">begin</a></li><li data-type='method'><a href="Postgresjs.html#commit">commit</a></li><li data-type='method'><a href="Postgresjs.html#deleteHelper">deleteHelper</a></li><li data-type='method'><a href="Postgresjs.html#end">end</a></li><li data-type='method'><a href="Postgresjs.html#error">error</a></li><li data-type='method'><a href="Postgresjs.html#insertHelper">insertHelper</a></li><li data-type='method'><a href="Postgresjs.html#merge">merge</a></li><li data-type='method'><a href="Postgresjs.html#mergeHelper">mergeHelper</a></li><li data-type='method'><a href="Postgresjs.html#orderByHelper">orderByHelper</a></li><li data-type='method'><a href="Postgresjs.html#query">query</a></li><li data-type='method'><a href="Postgresjs.html#rollback">rollback</a></li><li data-type='method'><a href="Postgresjs.html#selectHelper">selectHelper</a></li><li data-type='method'><a href="Postgresjs.html#setLocalConfig">setLocalConfig</a></li><li data-type='method'><a href="Postgresjs.html#setResume">setResume</a></li><li data-type='method'><a href="Postgresjs.html#start">start</a></li><li data-type='method'><a href="Postgresjs.html#updateHelper">updateHelper</a></li><li data-type='method'><a href="Postgresjs.html#whereHelper">whereHelper</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Postgresjs.html">Postgresjs</a><ul class='methods'><li data-type='method'><a href="Postgresjs.html#asyncForEach">asyncForEach</a></li><li data-type='method'><a href="Postgresjs.html#begin">begin</a></li><li data-type='method'><a href="Postgresjs.html#commit">commit</a></li><li data-type='method'><a href="Postgresjs.html#deleteHelper">deleteHelper</a></li><li data-type='method'><a href="Postgresjs.html#end">end</a></li><li data-type='method'><a href="Postgresjs.html#error">error</a></li><li data-type='method'><a href="Postgresjs.html#insertHelper">insertHelper</a></li><li data-type='method'><a href="Postgresjs.html#merge">merge</a></li><li data-type='method'><a href="Postgresjs.html#mergeHelper">mergeHelper</a></li><li data-type='method'><a href="Postgresjs.html#orderByHelper">orderByHelper</a></li><li data-type='method'><a href="Postgresjs.html#query">query</a></li><li data-type='method'><a href="Postgresjs.html#rollback">rollback</a></li><li data-type='method'><a href="Postgresjs.html#selectArray">selectArray</a></li><li data-type='method'><a href="Postgresjs.html#selectHelper">selectHelper</a></li><li data-type='method'><a href="Postgresjs.html#selectRow">selectRow</a></li><li data-type='method'><a href="Postgresjs.html#setLocalConfig">setLocalConfig</a></li><li data-type='method'><a href="Postgresjs.html#setResume">setResume</a></li><li data-type='method'><a href="Postgresjs.html#start">start</a></li><li data-type='method'><a href="Postgresjs.html#updateHelper">updateHelper</a></li><li data-type='method'><a href="Postgresjs.html#whereHelper">whereHelper</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -149,6 +149,8 @@ class Postgresjs {
         this.resultCount = 0;
         this.last_error = null;
 
+        this._throwErrors = true;
+
         this.setLocalConfig(config);
 
     }
@@ -156,6 +158,16 @@ class Postgresjs {
     //##########################################################################
     //  Config Methods
     //##########################################################################
+
+    /**
+     * Disabling throwErrors will stop suspend from throwing errors on callbacks.
+     * This is enabled by default.
+     * @param {Boolean} value
+     */
+    set throwErrors(value) {
+        this._throwErrors = value;
+    }
+
 
     /**
      * @description Required to set this before you first initalize this class.&lt;br>
@@ -510,6 +522,54 @@ class Postgresjs {
         doLoop();
     }
 
+    //##########################################################################
+    //  Select Methods
+    //##########################################################################
+
+    /**
+     * Executes SQL statement on database and returns the first row.
+     * &lt;p>Use question-marks (ie: ?) as unnamed parameters within the SQL statement.&lt;/p>
+     * &lt;h4>Example:&lt;/h4>
+     * &lt;pre>
+     *     //..
+     *     let row = yield db.selectRow("select username from users where email=?;",["test@test.com"]);
+     *     //..
+     * &lt;/pre>
+     * @param {string} sql - sql statement to execute
+     * @param {Array} [paras=null] - array of parameters, replacing "?" in SQL
+     * @param {Postgresjs~cbOnQuery} [cb=null] - Use callback or leave null to use suspend.resume.
+     *              &lt;br>Returns cb(err,results) where result is an array of rows.
+     */
+    selectRow(sql, paras, cb) {
+        this.initHandleCallback();
+
+        this.query(sql, paras, (err,result) => {
+            if (err || result==null || result.length==0) {
+                this.handleCallback(cb,err,result);
+                return;
+            }
+            this.handleCallback(cb,null,result[0]);
+        });
+    }
+
+
+    /**
+     * Executes SQL statement on database and returns the array of rows.
+     * &lt;p>Use question-marks (ie: ?) as unnamed parameters within the SQL statement.&lt;/p>
+     * &lt;h4>Example:&lt;/h4>
+     * &lt;pre>
+     *     //..
+     *     let arr = yield db.selectArray("select username from users where email=?;",["test@test.com"]);
+     *     //..
+     * &lt;/pre>
+     * @param {string} sql - sql statement to execute
+     * @param {Array} [paras=null] - array of parameters, replacing "?" in SQL
+     * @param {Postgresjs~cbOnQuery} [cb=null] - Use callback or leave null to use suspend.resume.
+     *              &lt;br>Returns cb(err,results) where result is an array of rows.
+     */
+    selectArray(sql, paras, cb) {
+        this.query(sql, paras, cb);
+    }
 
 
 
@@ -1365,8 +1425,13 @@ class Postgresjs {
         }
         if (cb)
             cb(err, result, this.resume_next);
-        else if (this.resume_next)
-            this.resume_next(err, result);
+        else if (this.resume_next) {
+
+            if (this._throwErrors)
+                this.resume_next(err, result);
+            else
+                this.resume_next(null, result);
+        }
     }
 };
 module.exports = Postgresjs;
@@ -1607,7 +1672,7 @@ function updateAutoCloseInterval(enabled,minutes) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jul 14 2016 06:49:26 GMT-0400 (Eastern Daylight Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Nov 27 2016 12:06:18 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
